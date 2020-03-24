@@ -46,6 +46,6 @@ jobs:
       with:
         files: vyos-build/build/vyos-${{ env.RELEASE_VERSION }}-amd64.iso
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.myToken }}
           
 
