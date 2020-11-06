@@ -35,15 +35,29 @@ jobs:
         ls vyos-build/build -lh
         
     - name: Persist created iso
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: vyos-lts
-        path: 'vyos-build/build/vyos-${{ env.RELEASE_VERSION }}-amd64.iso'      
-            
-    - name: Upload to Release
-      uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        files: vyos-build/build/vyos-${{ env.RELEASE_VERSION }}-amd64.iso
+        path: 'vyos-build/build/vyos-${{ env.RELEASE_VERSION }}-amd64.iso'   
+        
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.myToken }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        draft: false
+        prerelease: false
+          
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.myToken }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: vyos-build/build/vyos-${{ env.RELEASE_VERSION }}-amd64.iso
+        asset_name: vyos-${{ env.RELEASE_VERSION }}-amd64.iso
+        asset_content_type: application/octet-stream
