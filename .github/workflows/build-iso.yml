@@ -17,30 +17,29 @@ jobs:
 
     steps:
     - name: Set env
-      run: echo "RELEASE_VERSION=${GITHUB_REF:10}" >> $GITHUB_ENV
+      run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF:10}    
 
-    - name: Pull vyos-build docker image
-      run: |
-        docker pull vyos/vyos-build:crux
-        
-    - name: Build iso
+    - name: Build vyos-build docker image
       run: |
         git clone -b crux --single-branch https://github.com/vyos/vyos-build.git
         cd vyos-build
-        docker run --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:crux bash -c './configure --architecture amd64 --build-type release --version "${{ env.RELEASE_VERSION }}" && sudo make iso'
-           
+        docker build -t vyos-builder docker
+        
+    - name: Build iso
+      run: |
+        docker run --rm --privileged -v $(pwd)/vyos-build:/vyos -w /vyos vyos-builder bash -c './configure --architecture amd64 --build-type release && sudo make iso'
+  
+    - name: reanme
+      run: |
+        mv vyos-build/build/live-image-amd64.hybrid.iso vyos-build/build/vyos-${{ env.RELEASE_VERSION }}-amd64.iso
+        ls vyos-build/build -lh
+        
     - name: Persist created iso
       uses: actions/upload-artifact@v1
       with:
         name: vyos-lts
-        path: 'vyos-build/build/vyos-${{ env.RELEASE_VERSION }}-amd64.iso'   
-   
-    - name: check path
-      run: | 
-        pwd
-        ls
-        ls vyos-build/build/vyos-${{ env.RELEASE_VERSION }}-amd64.iso
-   
+        path: 'vyos-build/build/vyos-${{ env.RELEASE_VERSION }}-amd64.iso'      
+            
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
@@ -48,5 +47,3 @@ jobs:
         files: vyos-build/build/vyos-${{ env.RELEASE_VERSION }}-amd64.iso
       env:
         GITHUB_TOKEN: ${{ secrets.myToken }}
-          
-
