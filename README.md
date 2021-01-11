@@ -1,3 +1,5 @@
+[![build-vyos-lts Status](https://github.com/zengkid/build-vyos-lts/workflows/Build%20VyOS%20LTS/badge.svg)](https://github.com/zengkid/build-vyos-lts/actions)
+
 # build-vyos-lts
 
     git tag <tagname>
