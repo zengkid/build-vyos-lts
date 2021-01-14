@@ -28,31 +28,14 @@ jobs:
         git clone -b current --single-branch https://github.com/vyos/vyos-build.git
         cd vyos-build
         docker run --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:current bash -c './configure --architecture amd64 --build-type release --version "${{ env.RELEASE_VERSION }}" && sudo make iso'
-           
-    - name: Persist created iso
-      uses: actions/upload-artifact@v2
+   
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
       with:
-        name: vyos-lts
-        path: 'vyos-build/build/vyos-${{ env.RELEASE_VERSION }}-amd64.iso'   
-        
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.myToken }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: ${{ github.ref }}
-        draft: false
-        prerelease: false
-          
-    - name: Upload Release Asset
-      id: upload-release-asset 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.myToken }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: vyos-build/build/vyos-${{ env.RELEASE_VERSION }}-amd64.iso
-        asset_name: vyos-${{ env.RELEASE_VERSION }}-amd64.iso
-        asset_content_type: application/octet-stream
+        repo_token: ${{ secrets.myToken }}
+        file: vyos-build/build/vyos-${{ env.RELEASE_VERSION }}-amd64.iso
+        tag: ${{ github.ref }}
+        overwrite: true
+        file_glob: true
+  
+  
