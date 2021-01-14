@@ -21,13 +21,13 @@ jobs:
 
     - name: Pull vyos-build docker image
       run: |
-        docker pull vyos/vyos-build:crux
+        docker pull vyos/vyos-build:current
         
     - name: Build iso
       run: |
-        git clone -b crux --single-branch https://github.com/vyos/vyos-build.git
+        git clone -b current --single-branch https://github.com/vyos/vyos-build.git
         cd vyos-build
-        docker run --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:crux bash -c './configure --architecture amd64 --build-type release --version "${{ env.RELEASE_VERSION }}" && sudo make iso'
+        docker run --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:current bash -c './configure --architecture amd64 --build-type release --version "${{ env.RELEASE_VERSION }}" && sudo make iso'
            
     - name: Persist created iso
       uses: actions/upload-artifact@v2
