@@ -6,10 +6,20 @@ name: Build VyOS LTS
 #   push:
 #     branches: 
 #       - master
-on:
-  push:
-    tags:
-      - 'v*'
+# on:
+#   push:
+#     tags:
+#       - 'v*'
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'vyos version'     
+        required: true
+      branch:
+        description: 'Define branch name'     
+        required: true
+        default: 'equuleus'
 
 jobs:
   build:
@@ -33,7 +43,7 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.myToken }}
-        file: vyos-build/build/vyos-${{ env.RELEASE_VERSION }}-amd64.iso
+        file: vyos-build/build/vyos-${{ github.event.inputs.version}}-amd64.iso
         tag: ${{ github.ref }}
         overwrite: true
         file_glob: true
