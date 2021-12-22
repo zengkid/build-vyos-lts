@@ -37,7 +37,7 @@ jobs:
       run: |
         git clone -b equuleus --single-branch https://github.com/vyos/vyos-build.git
         cd vyos-build
-        docker run --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:equuleus bash -c './configure --architecture amd64 --build-type release --version "${{ env.RELEASE_VERSION }}" && sudo make iso'
+        docker run --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:equuleus bash -c './configure --architecture amd64 --build-type release --version "${{ github.event.inputs.version}}" && sudo make iso'
    
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
