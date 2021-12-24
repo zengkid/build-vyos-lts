@@ -30,7 +30,7 @@ jobs:
 
     - name: Output1
       run: |
-        echo "The time was ${{ steps.date.outputs.date }}"
+        echo "The time was ${{ steps.date.outputs.time  }}"
         echo "The time was ${{ steps.date.outputs.time }}"
         echo "The year was ${{ steps.date.outputs.year }}"
         echo "The month was ${{ steps.date.outputs.month }}"
@@ -51,7 +51,7 @@ jobs:
     #   run: |
     #     git clone -b equuleus --single-branch https://github.com/vyos/vyos-build.git
     #     cd vyos-build
-    #     docker run --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:equuleus bash -c './configure --architecture amd64 --build-type release --version "${{ steps.date.outputs.date }}" && sudo make iso'
+    #     docker run --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:equuleus bash -c './configure --architecture amd64 --build-type release --version "${{ steps.date.outputs.time  }}" && sudo make iso'
 
 
     - name: Release snapshot
@@ -60,8 +60,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.myToken }}
       with:
-        tag_name: ${{ steps.date.outputs.date }}
-        release_name: ${{ steps.date.outputs.date }}
+        tag_name: ${{ steps.date.outputs.time }}
+        release_name: ${{ steps.date.outputs.time }}
         draft: false
         prerelease: false
 
@@ -69,8 +69,8 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.myToken }}
-        file: vyos-build/build/vyos-${{ steps.date.outputs.date }}-amd64.iso
-        tag: ${{ steps.date.outputs.date }}
+        file: vyos-build/build/vyos-${{ steps.date.outputs.time  }}-amd64.iso
+        tag: ${{ steps.date.outputs.time  }}
         overwrite: true
         file_glob: true
   
