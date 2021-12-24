@@ -54,24 +54,24 @@ jobs:
     #     docker run --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:equuleus bash -c './configure --architecture amd64 --build-type release --version "${{ steps.date.outputs.date }}" && sudo make iso'
 
 
-    # - name: Release snapshot
-    #   id: release-snapshot
-    #   uses: actions/create-release@latest
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.myToken }}
-    #   with:
-    #     tag_name: ${{ steps.date.outputs.date }}
-    #     release_name: ${{ steps.date.outputs.date }}
-    #     draft: false
-    #     prerelease: false
+    - name: Release snapshot
+      id: release-snapshot
+      uses: actions/create-release@latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.myToken }}
+      with:
+        tag_name: ${{ steps.date.outputs.date }}
+        release_name: ${{ steps.date.outputs.date }}
+        draft: false
+        prerelease: false
 
-    # - name: Upload binaries to release
-    #   uses: svenstaro/upload-release-action@v2
-    #   with:
-    #     repo_token: ${{ secrets.myToken }}
-    #     file: vyos-build/build/vyos-${{ steps.date.outputs.date }}-amd64.iso
-    #     tag: ${{ steps.date.outputs.date }}
-    #     overwrite: true
-    #     file_glob: true
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.myToken }}
+        file: vyos-build/build/vyos-${{ steps.date.outputs.date }}-amd64.iso
+        tag: ${{ steps.date.outputs.date }}
+        overwrite: true
+        file_glob: true
   
   
