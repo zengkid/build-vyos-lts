@@ -19,11 +19,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-     - name: Get current date
+    - name: Get current date
       id: date
       uses: Kaven-Universe/github-action-current-date-time@v1.1.0
       with:
-        format: "YYYYMMDDHHmmss"
+       format: "YYYYMMDDHHmmss"
 
     - name: Pull vyos-build docker image
       run: |
