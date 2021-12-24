@@ -10,8 +10,9 @@ name: Build VyOS LTS
 #   push:
 #     tags:
 #       - 'v*'
-on: 
-  workflow_dispatch
+on:
+  workflow_dispatch  
+
 
 jobs:
   build:
