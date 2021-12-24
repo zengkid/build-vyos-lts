@@ -19,10 +19,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set env
-      run: echo "RELEASE_VERSION=${GITHUB_REF:11}" >> $GITHUB_ENV
-
-    - name: Get current date
+     - name: Get current date
       id: date
       uses: Kaven-Universe/github-action-current-date-time@v1.1.0
       with:
@@ -37,18 +34,6 @@ jobs:
         git clone -b equuleus --single-branch https://github.com/vyos/vyos-build.git
         cd vyos-build
         docker run --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:equuleus bash -c './configure --architecture amd64 --build-type release --version "${{ steps.date.outputs.time  }}" && sudo make iso'
-
-
-    # - name: Release snapshot
-    #   id: release-snapshot
-    #   uses: actions/create-release@latest
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.myToken }}
-    #   with:
-    #     tag_name: equuleus-${{ steps.date.outputs.time }}
-    #     release_name: equuleus-${{ steps.date.outputs.time }}
-    #     draft: false
-    #     prerelease: false
 
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
