@@ -33,19 +33,19 @@ jobs:
         docker run --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:equuleus bash -c './configure --architecture amd64 --build-type release --version "${{ github.event.inputs.version}}" && sudo make iso'
 
     - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"  
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"  
 
     - name: Release snapshot
-        id: release-snapshot
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.myToken }}
-        with:
-          tag_name: ${{ steps.date.outputs.date }}
-          release_name: ${{ steps.date.outputs.date }}
-          draft: false
-          prerelease: false
+      id: release-snapshot
+      uses: actions/create-release@latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.myToken }}
+      with:
+        tag_name: ${{ steps.date.outputs.date }}
+        release_name: ${{ steps.date.outputs.date }}
+        draft: false
+        prerelease: false
 
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
