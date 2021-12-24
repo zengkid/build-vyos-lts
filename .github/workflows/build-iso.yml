@@ -28,21 +28,6 @@ jobs:
       with:
         format: "YYYYMMDDHHmmss"
 
-    - name: Output1
-      run: |
-        echo "The time was ${{ steps.date.outputs.time  }}"
-        echo "The time was ${{ steps.date.outputs.time }}"
-        echo "The year was ${{ steps.date.outputs.year }}"
-        echo "The month was ${{ steps.date.outputs.month }}"
-        echo "The day was ${{ steps.date.outputs.day }}"
-        echo "The hours was ${{ steps.date.outputs.hours }}"
-        echo "The minutes was ${{ steps.date.outputs.minutes }}"
-        echo "The seconds was ${{ steps.date.outputs.seconds }}"
-        echo "The milliseconds was ${{ steps.date.outputs.milliseconds }}"
-        echo "The day_of_week was ${{ steps.date.outputs.day_of_week }}"
-        echo "The week_of_year was ${{ steps.date.outputs.week_of_year }}"
-        echo "The milliseconds_since_epoch was ${{ steps.date.outputs.milliseconds_since_epoch }}"
-
     - name: Pull vyos-build docker image
       run: |
         docker pull vyos/vyos-build:equuleus
@@ -60,8 +45,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.myToken }}
       with:
-        tag_name: ${{ steps.date.outputs.time }}
-        release_name: ${{ steps.date.outputs.time }}
+        tag_name: equuleus-${{ steps.date.outputs.time }}
+        release_name: equuleus-${{ steps.date.outputs.time }}
         draft: false
         prerelease: false
 
