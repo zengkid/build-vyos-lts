@@ -1,0 +1,50 @@
+name: Build VyOS LTS
+
+# on: 
+#   release:
+#     types: [published]
+#   push:
+#     branches: 
+#       - master
+on:
+  push:
+    tags:
+      - 'v*'
+# on:
+#   workflow_dispatch  
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Set env
+      run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF:10}    
+
+    # - name: Get current date
+    #   id: date
+    #   uses: Kaven-Universe/github-action-current-date-time@v1.1.0
+    #   with:
+    #    format: "YYYYMMDDHHmmss"
+
+    - name: Pull vyos-build docker image
+      run: |
+        docker pull vyos/vyos-build:equuleus
+        
+    - name: Build iso
+      run: |
+        git clone -b equuleus --single-branch https://github.com/vyos/vyos-build.git
+        cd vyos-build
+        docker run --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:equuleus bash -c './configure --architecture amd64 --build-type release --version "${{ env.RELEASE_VERSION }}" && sudo make iso'
+
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.myToken }}
+        file: vyos-build/build/vyos-${{ env.RELEASE_VERSION }}-amd64.iso
+        tag: vyos-${{ env.RELEASE_VERSION }}
+        overwrite: true
+        file_glob: true
+  
+  
