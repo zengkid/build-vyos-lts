@@ -19,15 +19,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Get current date
-      id: date
-      uses: Kaven-Universe/github-action-current-date-time@v1.1.0
-      with:
-       format: "YYYYMMDDHHmmss"
-
     - name: Set VyOS version
-        id: set_vyos_version
-        run: |
+      id: set_vyos_version
+      run: |
           echo "VYOS_VERSION=sagitta-1.4-$(date -u +%Y%m%d%H%M)" >> $GITHUB_ENV
 
     - name: Pull vyos-build docker image
