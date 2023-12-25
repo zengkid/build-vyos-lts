@@ -18,7 +18,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-     # - name: Get current date
+    # - name: Get current date
     #   id: date
     #   uses: Kaven-Universe/github-action-current-date-time@v1.1.0
     #   with:
