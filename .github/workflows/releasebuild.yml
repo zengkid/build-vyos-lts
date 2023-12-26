@@ -19,14 +19,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # - name: Set env
-    #   run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF_NAME }    
-
-    # - name: Get current date
-    #   id: date
-    #   uses: Kaven-Universe/github-action-current-date-time@v1.1.0
-    #   with:
-    #    format: "YYYYMMDDHHmmss"
+    - name: Set env
+      run: |
+        echo "VYOS_VERSION=${GITHUB_REF_NAME }" >> $GITHUB_ENV
 
     - name: Pull vyos-build docker image
       run: |
@@ -36,14 +31,14 @@ jobs:
       run: |
         git clone -b sagitta --single-branch https://github.com/vyos/vyos-build
         cd vyos-build
-        docker run --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:sagitta bash -c 'sudo make clean && sudo ./configure --architecture amd64 --build-type release --version "${{ env.GITHUB_REF_NAME }}" && sudo make iso'
+        docker run --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:sagitta bash -c 'sudo make clean && sudo ./configure --architecture amd64 --build-type release --version "${{ env.VYOS_VERSION }}" && sudo make iso'
 
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: vyos-build/build/vyos-${{ env.GITHUB_REF_NAME }}-amd64.iso
-        tag: vyos-sagitta-${{ env.GITHUB_REF_NAME }}
+        file: vyos-build/build/vyos-${{ env.VYOS_VERSION }}-amd64.iso
+        tag: vyos-sagitta-${{ env.VYOS_VERSION }}
         overwrite: true
         file_glob: true
   
