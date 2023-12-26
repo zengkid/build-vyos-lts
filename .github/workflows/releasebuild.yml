@@ -21,7 +21,7 @@ jobs:
     steps:
     - name: Set env
       run: |
-        echo "VYOS_VERSION=${{ github.ref }}" >> $GITHUB_ENV
+        echo "VYOS_VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
 
     - name: Pull vyos-build docker image
       run: |
