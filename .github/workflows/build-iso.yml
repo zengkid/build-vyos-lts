@@ -38,9 +38,9 @@ jobs:
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       with:
-        repo_token: ${{ secrets.myToken }}
+        repo_token: ${{ secrets.GITHUB_TOKEN  }}
         file: vyos-build/build/vyos-${{ steps.date.outputs.time  }}-amd64.iso
-        tag: equuleus-${{ steps.date.outputs.time  }}
+        tag: sagitta-${{ steps.date.outputs.time  }}
         overwrite: true
         file_glob: true
   
