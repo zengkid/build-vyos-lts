@@ -27,13 +27,13 @@ jobs:
 
     - name: Pull vyos-build docker image
       run: |
-        docker pull vyos/vyos-build:equuleus
+        docker pull vyos/vyos-build:sagitta
         
     - name: Build iso
       run: |
-        git clone -b equuleus --single-branch https://github.com/vyos/vyos-build.git
+        git clone -b sagitta --single-branch https://github.com/vyos/vyos-build
         cd vyos-build
-        docker run --rm --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:equuleus bash -c './configure --architecture amd64 --build-type release --version "${{ steps.date.outputs.time  }}" && sudo make iso'
+        docker run --rm -it --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:sagitta bash -c './configure --architecture amd64 --build-type release --version "${{ steps.date.outputs.time  }}" && sudo make iso'
 
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
