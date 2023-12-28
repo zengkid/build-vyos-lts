@@ -10,10 +10,9 @@ on:
   push:
     tags:
       - 'v*'
-on:
-  workflow_dispatch  
-      inputs:
-      tag:
+  workflow_dispatch:
+    inputs:
+      tag: 
         description: "The tag version you want to build"
 
 jobs:
