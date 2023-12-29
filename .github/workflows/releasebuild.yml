@@ -10,18 +10,24 @@ on:
   push:
     tags:
       - 'v*'
-# on:
-#   workflow_dispatch  
-
+on:
+  workflow_dispatch  
+      inputs:
+      tag:
+        description: "The tag version you want to build"
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set env
+    - name: Set version
       run: |
-        echo "VYOS_VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
+        if [[ -z "${{ github.event.inputs.tag }}" ]]; then
+          echo "VYOS_VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
+        else 
+          echo "VYOS_VERSION=${{ github.event.inputs.tag }}" >> $GITHUB_ENV
+        fi
 
     - name: Pull vyos-build docker image
       run: |
